@@ -12,34 +12,39 @@ class Queue
 {
 	private:
 		int *mArr = nullptr;
-		int mLen;
+		int mArrLen;
+		int mQLen;
 		char mChoice;
 		int secondStackStarts;
 		int firstStackCount;
-		int secondStackCount;
 		int elementValue;
 
 	public:
 
 		Queue(int len = 0)
-			:mLen(len)
+			:mArrLen(len)
 		{
-			mArr = new int[mLen] {0};
+			mQLen = mArrLen - 1;
+			
+			mArr = new int[mArrLen] {0};
 
-			secondStackStarts = mLen / 2;
+			secondStackStarts = mQLen / 2;
 			cout << "secondStackStarts is " << secondStackStarts << '\n';	
 
 			firstStackCount = 0;
-			secondStackCount = mLen - 1;
 			elementValue = 1;
 		}
-		void moveElements(int startPoint, int endPoint)
+		void moveElements()
 		{
 			int mark = 0;
 			int tempLen = 0;
 			int *tempArr = nullptr;
+			int earlierElements = 0;
 
-			for(int index = startPoint; index < endPoint; ++index)
+			for(int index = secondStackStarts; mArr[index] != 0; index++)
+				earlierElements++;
+			
+			for(int index = secondStackStarts + earlierElements; index < mArrLen; ++index)
 			{
 				if(mArr[index] != 0)
 				{
@@ -58,16 +63,14 @@ class Queue
 			}
 
 			tempCount = 0;
-			for(int index = mark - 1; index < (mark + tempLen) - 1; ++index)
+			mark = secondStackStarts + earlierElements;
+			for(int index = mark ; index < (mark + tempLen); ++index)
 			{
 				mArr[index] = tempArr[tempCount];
 				tempCount++;
 			}
 
-			if(startPoint == secondStackStarts)
-				mArr[mLen - 1] = 0;
-			else
-				mArr[0] = 0;
+			mArr[mArrLen - 1] = 0;
 
 			delete[] tempArr;
 			tempArr = nullptr;
@@ -82,7 +85,7 @@ class Queue
 				if(mArr[index] == 0)
 					stack1Count++;
 			}
-			for(int index = secondStackStarts; index < mLen; ++index)
+			for(int index = secondStackStarts; index < mArrLen - 1; ++index)
 			{
 				if(mArr[index] == 0)
 					stack2Count++;
@@ -94,7 +97,7 @@ class Queue
 				return "FFSE"; // First Full, Second Empty
 			else if(stack1Count != 0 && stack2Count == 0)
 				return "FESF"; // First empty, second full
-			else if(stack1Count + stack2Count == mLen)
+			else if(stack1Count + stack2Count == mArrLen - 1)
 				return "CompletelyEmpty"; // Both Stacks Completely Empty
 			else if(stack1Count != 0 && stack2Count != 0)
 				return "FESE"; // First empty, Second empty (but queue not completely empty)
@@ -102,29 +105,46 @@ class Queue
 		}
 		void shiftStack()
 		{
-			int stackCounter = mLen - 1;
+			int stackCounter = mArrLen - 1;
 			int tempCounter = 0;
 			int tempLen = 0;
 			
-			for(int index = secondStackStarts; index < mLen ; ++index)
+			while(stackCounter > secondStackStarts) // Pushing the 0 at mArrLen - 1 to secondStackStarts, so that elements can be extracted easily
+			{
+				mArr[stackCounter] = mArr[stackCounter - 1];
+				mArr[stackCounter - 1] = 0;
+				stackCounter--;
+			}
+			
+			cout << "second stack is: ";
+			for(int i = secondStackStarts ; i < mArrLen; ++i)
+				cout << mArr[i] << ' ';
+			cout << '\n';
+			
+			
+			for(int index = secondStackStarts + 1; index < mArrLen ; ++index)
 				tempLen++;
 
 			int* tempArr = new int[tempLen] {0};
 			
 			while(tempCounter < tempLen) // Copying the second stack into a temporary array
 			{
-				tempArr[tempCounter] = mArr[mLen - 1];
+				tempArr[tempCounter] = mArr[mArrLen - 1];
 				tempCounter++;
 				
-				while(stackCounter > secondStackStarts)
+				stackCounter = mArrLen - 1;
+				while(stackCounter > secondStackStarts + 1)
 				{
 					mArr[stackCounter] = mArr[stackCounter - 1];
 					mArr[stackCounter - 1] = 0;
 					stackCounter--;
 				}
-				if(mArr[mLen - 1] == 0)
-					break;
 			}
+			
+			cout << "tempArr is: ";
+			for(int i = 0; i < tempLen; ++i)
+				cout << tempArr[i] << ' ';
+			cout << '\n';
 			
 			tempCounter = 0; // Pasting the temporary array into the first stack
 			while(tempCounter < tempLen)
@@ -148,25 +168,14 @@ class Queue
 		{
 			if(this->fullOrEmpty() == "FFSE" || this->fullOrEmpty() == "FESE" || this->fullOrEmpty() == "CompletelyEmpty")
 			{
-				mArr[ mLen - 1 ] = elementValue;
+				mArr[ mArrLen - 1 ] = elementValue;
+				this->moveElements();
+				elementValue++;
 				cout << *this;
-
-				if(secondStackCount - 1 >= secondStackStarts)
-				{
-					this->moveElements(secondStackStarts, mLen);
-					secondStackCount--;
-					elementValue++;
-				}
-				else
-				{
-					elementValue++;
-					this->enqueue();
-				}
 			}
 			else if(this->fullOrEmpty() != "FFSF")
 			{
 				this->shiftStack();
-				secondStackCount = mLen - 1;
 				this->enqueue();
 			}
 		}
@@ -182,14 +191,14 @@ class Queue
 ostream& operator<<(ostream& out, const Queue& q)
 {
 	out << "ARRAY: ";
-	for(int index = 0; index < q.mLen; ++index)
+	for(int index = 0; index < q.mArrLen; ++index)
 	{
 		out << q.mArr[index] << " ";
 	}
 	out << '\n';
 
 	out << "QUEUE:";
-	for(int index = 0; index < q.mLen; ++index)
+	for(int index = 0; index < q.mArrLen; ++index)
 	{
 		if(q.mArr[index] != 0)
 		{
