@@ -29,6 +29,9 @@ class Queue
 			mArr = new int[mArrLen] {0};
 
 			secondStackStarts = mQLen / 2;
+			if(mQLen % 2 != 0) // If mQLen is even, secondStackStarts is mQLen/2. When mQLen is odd, secondStackStarts is (mQLen/2) + 1
+				secondStackStarts++;
+
 			cout << "secondStackStarts is " << secondStackStarts << '\n';	
 
 			firstStackCount = 0;
@@ -125,7 +128,7 @@ class Queue
 			for(int index = secondStackStarts + 1; index < mArrLen ; ++index)
 				tempLen++;
 
-			int* tempArr = new int[tempLen] {0};
+			static int* tempArr = new int[tempLen] {0};
 			
 			while(tempCounter < tempLen) // Copying the second stack into a temporary array
 			{
