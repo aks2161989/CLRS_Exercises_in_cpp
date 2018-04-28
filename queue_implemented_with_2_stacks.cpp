@@ -31,11 +31,12 @@ class Queue
 			mArr = new int[mArrLen] {0};
 
 			secondStackStarts = (mArrLen - 1) / 2; // Because the last element is a blank (0) element
-			firstStackLength = secondStackStarts + 1;
+			firstStackLength = secondStackStarts;
 			secondStackLength = firstStackLength; // For even-length queues, both stacks are of equal length
 			if(mArrLen % 2 == 0) // If queue is even (array is odd), secondStackStarts is mArrLen - 1/2. When queue is odd, secondStackStarts is (mArrLen - 1/2) + 1
 			{
 				secondStackStarts++;
+				firstStackLength++;
 				secondStackLength--; // For odd-length queues, second stack is one element less than the first stack
 			}
 			
@@ -111,7 +112,7 @@ class Queue
 			else
 				tempCounter = 1;
 				
-			copyLength = secondStackStarts;
+			copyLength = firstStackLength;
 			
 			while(stackCounter > secondStackStarts) // Pushing the 0 at mArrLen - 1 to secondStackStarts, so that elements can be extracted easily
 			{
