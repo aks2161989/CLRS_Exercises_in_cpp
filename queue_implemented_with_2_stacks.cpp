@@ -33,13 +33,17 @@ class Queue
 			secondStackStarts = (mArrLen - 1) / 2; // Because the last element is a blank (0) element
 			firstStackLength = secondStackStarts;
 			secondStackLength = firstStackLength; // For even-length queues, both stacks are of equal length
-			if(mArrLen % 2 == 0) // If queue is even (array is odd), secondStackStarts is mArrLen - 1/2. When queue is odd, secondStackStarts is (mArrLen - 1/2) + 1
+			if(mArrLen % 2 == 0 && mArrLen != 2) // If queue is even (array is odd), secondStackStarts is mArrLen - 1/2. When queue is odd, secondStackStarts is (mArrLen - 1/2) + 1
 			{
 				secondStackStarts++;
 				firstStackLength++;
 				secondStackLength--; // For odd-length queues, second stack is one element less than the first stack
 			}
-			
+			else if(mArrLen == 2)
+			{
+				firstStackLength++;
+				secondStackLength = firstStackLength;
+			}
 			tempCopy = new int[ firstStackLength ] {0};
 			copyLength = firstStackLength;			
 
@@ -148,7 +152,7 @@ class Queue
 				cout << tempCopy[i] << ' ';
 			cout << '\n';
 		}
-		void pasteStack() // DONE TILL HERE
+		void pasteStack() 
 		{	
 			int stackCounter;		
 			tempCounter = 0; // Pasting the temporary array into the first stack
@@ -188,6 +192,7 @@ class Queue
 				}
 				this->enqueue();
 				this->pasteStack();
+				cout << *this;
 			}
 		}
 
