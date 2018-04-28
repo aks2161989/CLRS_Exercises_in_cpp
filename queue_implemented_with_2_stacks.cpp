@@ -30,10 +30,10 @@ class Queue
 		{
 			mArr = new int[mArrLen] {0};
 
-			secondStackStarts = mArrLen / 2;
+			secondStackStarts = (mArrLen - 1) / 2; // Because the last element is a blank (0) element
 			firstStackLength = secondStackStarts + 1;
 			secondStackLength = firstStackLength; // For even-length queues, both stacks are of equal length
-			if(mArrLen % 2 != 0) // If mArrLen is even, secondStackStarts is mArrLen/2. When mQLen is odd, secondStackStarts is (mArrLen/2) + 1
+			if(mArrLen % 2 == 0) // If queue is even (array is odd), secondStackStarts is mArrLen - 1/2. When queue is odd, secondStackStarts is (mArrLen - 1/2) + 1
 			{
 				secondStackStarts++;
 				secondStackLength--; // For odd-length queues, second stack is one element less than the first stack
@@ -51,10 +51,10 @@ class Queue
 		{
 			int earlierElements = 0;
 
-			for(int index = secondStackStarts; mArr[index] != 0; index++)
+			for(int index = secondStackStarts; mArr[index] != 0; index++) 
 				earlierElements++;
 			
-			for(int index = mArrLen - 1; index > secondStackStarts + earlierElements; --index)
+			for(int index = mArrLen - 1; index > secondStackStarts + earlierElements; --index) 
 			{
 				mArr[index - 1] = mArr[index];
 				mArr[index] = 0;
@@ -70,7 +70,7 @@ class Queue
 				if(mArr[index] == 0)
 					stack1Count++;
 			}
-			for(int index = secondStackStarts; index < mArrLen; ++index)
+			for(int index = secondStackStarts; index < mArrLen - 1; ++index)
 			{
 				if(mArr[index] == 0)
 					stack2Count++;
@@ -82,7 +82,7 @@ class Queue
 				return "FFSE"; // First Full, Second Empty
 			else if(stack1Count != 0 && stack2Count == 0)
 				return "FESF"; // First empty, second full
-			else if(stack1Count + stack2Count == mArrLen)
+			else if(stack1Count + stack2Count == (mArrLen - 1))
 				return "CompletelyEmpty"; // Both Stacks Completely Empty
 			else if(stack1Count != 0 && stack2Count != 0)
 				return "FESE"; // First empty, Second empty (but queue not completely empty)
@@ -113,12 +113,12 @@ class Queue
 				
 			copyLength = secondStackStarts;
 			
-//			while(stackCounter > secondStackStarts) // Pushing the 0 at mArrLen - 1 to secondStackStarts, so that elements can be extracted easily
-//			{
-//				mArr[stackCounter] = mArr[stackCounter - 1];
-//				mArr[stackCounter - 1] = 0;
-//				stackCounter--;
-//			}
+			while(stackCounter > secondStackStarts) // Pushing the 0 at mArrLen - 1 to secondStackStarts, so that elements can be extracted easily
+			{
+				mArr[stackCounter] = mArr[stackCounter - 1];
+				mArr[stackCounter - 1] = 0;
+				stackCounter--;
+			}
 			
 			cout << "second stack is: ";
 			for(int i = secondStackStarts ; i < mArrLen; ++i)
@@ -134,7 +134,7 @@ class Queue
 				tempCounter++;
 				
 				stackCounter = mArrLen - 1;
-				while(stackCounter > secondStackStarts)
+				while(stackCounter > secondStackStarts + 1)
 				{
 					mArr[stackCounter] = mArr[stackCounter - 1];
 					mArr[stackCounter - 1] = 0;
@@ -147,7 +147,7 @@ class Queue
 				cout << tempCopy[i] << ' ';
 			cout << '\n';
 		}
-		void pasteStack()
+		void pasteStack() // DONE TILL HERE
 		{	
 			int stackCounter;		
 			tempCounter = 0; // Pasting the temporary array into the first stack
