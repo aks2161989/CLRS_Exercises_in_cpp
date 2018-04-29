@@ -195,6 +195,41 @@ class Queue
 				cout << *this;
 			}
 		}
+		void dequeue()
+		{
+			int elementdequeued = 0;
+			while( mArr[ 0 ] != 0 )
+			{
+				elementdequeued = mArr[ 0 ];
+				mArr[ 0 ] = 0;
+				
+				for(int stackOneIndex = 0; stackOneIndex < secondStackStarts - 1; stackOneIndex++)
+				{
+					mArr[ stackOneIndex ] = mArr[ stackOneIndex + 1];
+					mArr[ stackOneIndex + 1 ] = 0;
+				}
+				cout << "Element " << elementdequeued << " dequeued from queue.\n";
+				cout << *this;
+			}
+			if( this->fullOrEmpty() == "FESF")
+			{
+				delete[] tempCopy;
+				tempCopy = new int[ copyLength ]{ 0 };
+				this->copyStack();
+				this->pasteStack();
+				if( mArr[ 0 ] == 0 ) // When Array is even and queue is odd, 0 is pasted on index 0 of mArr by pasteStack()
+				{
+					int counter = 0;
+					while( counter < secondStackStarts - 1 ) // Shift 0 from index 0 to index secondStackStarts - 1, in case of even arrays (odd queues)
+					{
+						mArr[ counter ] = mArr [ counter + 1 ];
+						mArr[ counter + 1 ] = 0;
+						counter++;
+					}
+				}
+				this->dequeue();
+			}
+		}
 
 		~Queue()
 		{
@@ -234,9 +269,14 @@ int main()
 
 	Queue q(len);
 
+	cout << "\nENQUEUEING...\n";
 	while(q.fullOrEmpty() != "FFSF")
 		q.enqueue();
 
+	cout << "\nDEQUEUEING...\n";
+	if(q.fullOrEmpty() != "CompletelyEmpty")
+		q.dequeue();
+		
 	return 0;
 }
 
