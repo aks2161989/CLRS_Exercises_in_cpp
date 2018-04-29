@@ -47,8 +47,6 @@ class Queue
 			tempCopy = new int[ firstStackLength ] {0};
 			copyLength = firstStackLength;			
 
-			cout << "secondStackStarts is " << secondStackStarts << '\n';	
-
 			firstStackCount = 0;
 			elementValue = 1;
 		}
@@ -124,18 +122,13 @@ class Queue
 				mArr[stackCounter - 1] = 0;
 				stackCounter--;
 			}
-			
-			cout << "second stack is: ";
-			for(int i = secondStackStarts ; i < mArrLen; ++i)
-				cout << mArr[i] << ' ';
-			cout << '\n';
-			
-			
+						
 			tempCopy = new int[copyLength] {0};
 			
 			while(tempCounter < copyLength) // Copying the second stack into a temporary array
 			{
 				tempCopy[tempCounter] = mArr[mArrLen - 1];
+				mArr[mArrLen - 1] = 0;
 				tempCounter++;
 				
 				stackCounter = mArrLen - 1;
@@ -146,11 +139,6 @@ class Queue
 					stackCounter--;
 				}
 			}
-			
-			cout << "tempCopy is: ";
-			for(int i = 0; i < copyLength; ++i)
-				cout << tempCopy[i] << ' ';
-			cout << '\n';
 		}
 		void pasteStack() 
 		{	
@@ -200,6 +188,7 @@ class Queue
 			int elementdequeued = 0;
 			while( mArr[ 0 ] != 0 )
 			{
+				cout << *this;
 				elementdequeued = mArr[ 0 ];
 				mArr[ 0 ] = 0;
 				
@@ -209,7 +198,7 @@ class Queue
 					mArr[ stackOneIndex + 1 ] = 0;
 				}
 				cout << "Element " << elementdequeued << " dequeued from queue.\n";
-				cout << *this;
+				
 			}
 			if( this->fullOrEmpty() == "FESF")
 			{
@@ -264,8 +253,11 @@ ostream& operator<<(ostream& out, const Queue& q)
 int main()
 {
 	int len;
-	cout << "How many elements should the queue have? ";
-	cin >> len;
+	do
+	{
+		cout << "How many elements should the queue have? ";
+		cin >> len;
+	} while( len < 2 );
 
 	Queue q(len);
 
@@ -276,6 +268,7 @@ int main()
 	cout << "\nDEQUEUEING...\n";
 	if(q.fullOrEmpty() != "CompletelyEmpty")
 		q.dequeue();
+	cout << q;
 		
 	return 0;
 }
