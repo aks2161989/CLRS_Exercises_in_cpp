@@ -148,7 +148,8 @@ class Queue
 			{
 				stackCounter = secondStackStarts - 1;
 				mArr[0] = tempCopy[tempCounter];
-				
+				cout << *this;
+								
 				while(stackCounter > 0 && tempCounter != copyLength - 1)
 				{
 					mArr[stackCounter] = mArr[stackCounter - 1];
@@ -180,7 +181,6 @@ class Queue
 				}
 				this->enqueue();
 				this->pasteStack();
-				cout << *this;
 			}
 		}
 		void dequeue()
